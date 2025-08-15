@@ -159,16 +159,34 @@
         const buttonsContainer = document.querySelector('.buttons-container');
         const container = document.querySelector('.container');
 
-        // Function to get random position within container bounds
+        // Function to get random position around the GIF only
         function getRandomPosition() {
-            const containerRect = container.getBoundingClientRect();
+            const gifContainer = document.querySelector('.gif-container');
+            const gifRect = gifContainer.getBoundingClientRect();
             const buttonRect = yesBtn.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
             
-            const maxX = containerRect.width - buttonRect.width - 40; // 40px padding
-            const maxY = containerRect.height - buttonRect.height - 40;
+            // Calculate the area around the GIF where button can move
+            const gifLeft = gifRect.left - containerRect.left;
+            const gifTop = gifRect.top - containerRect.top;
+            const gifWidth = gifRect.width;
+            const gifHeight = gifRect.height;
             
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
+            // Set boundaries around the GIF with some padding
+            const padding = 20;
+            const minX = gifLeft - padding;
+            const maxX = gifLeft + gifWidth + padding - buttonRect.width;
+            const minY = gifTop - padding;
+            const maxY = gifTop + gifHeight + padding - buttonRect.height;
+            
+            // Ensure button stays within container bounds
+            const finalMinX = Math.max(0, minX);
+            const finalMaxX = Math.min(containerRect.width - buttonRect.width, maxX);
+            const finalMinY = Math.max(0, minY);
+            const finalMaxY = Math.min(containerRect.height - buttonRect.height, maxY);
+            
+            const randomX = finalMinX + Math.random() * (finalMaxX - finalMinX);
+            const randomY = finalMinY + Math.random() * (finalMaxY - finalMinY);
             
             return { x: randomX, y: randomY };
         }
@@ -226,3 +244,4 @@
     </script>
 </body>
 </html>
+
