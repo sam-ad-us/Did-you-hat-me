@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Did you hate me?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .gif-container {
+            margin-bottom: 30px;
+        }
+
+        .main-gif {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-yes.moving {
+            transition: all 0.2s ease;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result-gif {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .thanks-text {
+            font-size: 24px;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .main-gif {
+                width: 250px;
+                height: 150px;
+            }
+            
+            .question-text {
+                font-size: 24px;
+            }
+            
+            .buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gif-container">
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3VsNHppNjRkYzV4ZDQ5amNtOWtsdnIwOGtoa2Vlanl5YTdsaWlxYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/T9kaCTuV7bwCqLikUn/giphy.gif" 
+                 alt="Main GIF" class="main-gif">
+        </div>
+        
+        <div class="question-text">Did you hate me?</div>
+        
+        <div class="buttons-container">
+            <button class="btn btn-yes" id="yesBtn">Yes</button>
+            <button class="btn btn-no" id="noBtn">No</button>
+        </div>
+        
+        <div class="result-container" id="resultContainer">
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2g1d21waGluajB2N3g1d2M0OWFncGZvY3l2NzNobDVrN3Rrbno2MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pODuPbM5dQus7jxnFl/giphy.gif" 
+                 alt="Result GIF" class="result-gif">
+            <div class="thanks-text">Thanks</div>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const buttonsContainer = document.querySelector('.buttons-container');
+        const container = document.querySelector('.container');
+
+        // Function to get random position within container bounds
+        function getRandomPosition() {
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = yesBtn.getBoundingClientRect();
+            
+            const maxX = containerRect.width - buttonRect.width - 40; // 40px padding
+            const maxY = containerRect.height - buttonRect.height - 40;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            return { x: randomX, y: randomY };
+        }
+
+        // Function to move Yes button randomly
+        function moveYesButton() {
+            const position = getRandomPosition();
+            yesBtn.style.position = 'absolute';
+            yesBtn.style.left = position.x + 'px';
+            yesBtn.style.top = position.y + 'px';
+            yesBtn.classList.add('moving');
+            
+            // Remove moving class after animation
+            setTimeout(() => {
+                yesBtn.classList.remove('moving');
+            }, 200);
+        }
+
+        // Yes button click handler
+        yesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            moveYesButton();
+        });
+
+        // No button click handler
+        noBtn.addEventListener('click', function() {
+            // Hide buttons
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+            
+            // Show result
+            resultContainer.style.display = 'block';
+            
+            // Add some animation
+            resultContainer.style.opacity = '0';
+            resultContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                resultContainer.style.transition = 'all 0.5s ease';
+                resultContainer.style.opacity = '1';
+                resultContainer.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Prevent Yes button from being clicked when it's moving
+        yesBtn.addEventListener('mouseenter', function() {
+            if (this.classList.contains('moving')) {
+                this.style.pointerEvents = 'none';
+            }
+        });
+
+        yesBtn.addEventListener('mouseleave', function() {
+            this.style.pointerEvents = 'auto';
+        });
+    </script>
+</body>
+</html>
